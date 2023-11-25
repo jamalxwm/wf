@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Background from '../components/Background'; 
-import WindowScene from '../components/WindowScene';
+import WindowScene from '../components/WindowSceneOriginal';
 export default HomeScreen = () => (
   <Background>
     <View style={styles.container}>
