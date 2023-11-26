@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Background from '../components/Background'; 
-import WindowScene from '../components/WindowSceneOriginal';
+import WindowAnimation from '../components/WindowAnimation';
 export default HomeScreen = () => (
   <Background>
     <View style={styles.container}>
-      <WindowScene/>
+      <WindowAnimation/>
     </View>
   </Background>
 );
