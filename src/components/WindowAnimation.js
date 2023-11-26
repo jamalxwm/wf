@@ -1,5 +1,5 @@
 import { Text, StyleSheet, View, Dimensions } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Animated, {
   Keyframe,
   BounceInRight,
@@ -9,14 +9,19 @@ import Animated, {
   withTiming,
   withRepeat,
   withDelay,
+  runOnJS,
 } from 'react-native-reanimated';
 import PlaneAnimation from './PlaneAnimation';
+import { Audio } from 'expo-av';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 export default function WindowAnimation() {
   const cloudLeftStartPos = useSharedValue(-100);
+  const [sound, setSound] = useState();
+  const bounceInRight = BounceInRight.delay(3500);
+  // Animation styles for clouds
   const FadeInAndScaleOutdoorScene = new Keyframe({
     0: {
       opacity: 0,
@@ -49,7 +54,6 @@ export default function WindowAnimation() {
   });
 
   const cloudLeft = useAnimatedStyle(() => ({
-    
     transform: [{ translateX: cloudLeftStartPos.value }],
   }));
 
@@ -61,6 +65,27 @@ export default function WindowAnimation() {
       -1
     );
   }, []);
+
+  async function playSound() {
+    
+    try {
+      const { sound } = await Audio.Sound.createAsync(
+        require('../assets/sounds/bingbong.mp3')
+      );
+      setSound(sound);
+      
+      await sound.playAsync();
+    } catch (error) {
+      console.log('Error loading or playing sound:', error);
+    }
+  }
+
+  useEffect(() => {
+    const timer = setTimeout(playSound, 3500)
+
+    return () => clearTimeout(timer)
+  }, []);
+
   return (
     <View style={styles.container}>
       <Animated.Image
@@ -73,7 +98,7 @@ export default function WindowAnimation() {
         source={require('../assets/images/ui/window-layer-1.png')}
         style={{ ...styles.layer }}
       />
-      <PlaneAnimation/>
+      <PlaneAnimation />
       <Animated.Image
         entering={FadeInAndScaleIndoorScene.duration(1000).delay(2000)}
         source={require('../assets/images/ui/window-layer-2.png')}
@@ -89,7 +114,7 @@ export default function WindowAnimation() {
         style={{ ...styles.layer }}
       />
       <Animated.Image
-        entering={BounceInRight.delay(3500)}
+        entering={bounceInRight}
         source={require('../assets/images/ui/window-layer-4.png')}
         style={{ ...styles.layer }}
       />
